@@ -119,7 +119,7 @@ function GeneratePage() {
         <div>
           <div className="flex items-center justify-between">
             <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
-              Number of ideas
+              {t("gen.count")}
             </label>
             <span className="text-sm font-semibold">{count}</span>
           </div>
@@ -136,7 +136,7 @@ function GeneratePage() {
         <div>
           <div className="flex items-center justify-between">
             <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
-              <Clock className="h-3 w-3" /> Script duration
+              <Clock className="h-3 w-3" /> {t("gen.duration")}
             </label>
             <span className="text-sm font-semibold">
               {durationSec < 60 ? `${durationSec}s` : `${Math.floor(durationSec / 60)}m${durationSec % 60 ? ` ${durationSec % 60}s` : ""}`}
