@@ -137,13 +137,13 @@ function HooksPage() {
     if (!text) return;
     const { data, error } = await supabase
       .from("hooks")
-      .insert({ text, category: newCat.trim() || "general", source: "user" })
+      .insert({ text, category: newCat.trim() || "general", source: "user", language: lang })
       .select("*")
       .single();
     if (error || !data) return toast.error("Couldn't add hook");
     setItems((prev) => [data as Hook, ...prev]);
     setNewHook("");
-    toast.success("Hook added");
+    toast.success(t("hooks.added"));
   }
 
   async function removeHook(id: string) {
