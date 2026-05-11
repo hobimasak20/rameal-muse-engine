@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/dialog";
 import { enhanceHooks } from "@/lib/hooks.functions";
 import { cn } from "@/lib/utils";
+import { useLang } from "@/i18n/LanguageProvider";
 
 export const Route = createFileRoute("/hooks")({
   head: () => ({
