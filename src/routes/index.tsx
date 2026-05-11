@@ -53,52 +53,52 @@ function Home() {
         style={{ background: "var(--gradient-primary)" }}
       >
         <div className="text-xs font-semibold uppercase tracking-widest text-primary-foreground/80">
-          RameAL · Wandy POV
+          {t("home.eyebrow")}
         </div>
         <h1 className="mt-2 text-2xl font-bold leading-tight text-primary-foreground">
-          Apa yang nobody talks about hari ini?
+          {t("home.title")}
         </h1>
         <p className="mt-2 max-w-md text-sm text-primary-foreground/85">
-          Drop a topic. Dapet hook, foreshadow, body, ending, caption — siap shoot Reels / TikTok.
+          {t("home.subtitle")}
         </p>
         <Link to="/generate" className="mt-4 inline-block">
           <Button size="lg" variant="secondary" className="rounded-full">
             <Sparkles className="mr-2 h-4 w-4" />
-            Generate ideas
+            {t("home.cta")}
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </Link>
       </section>
 
       <section className="grid grid-cols-2 gap-3">
-        <Stat label="Ideas saved" value={ideaCount} icon={<Bookmark className="h-4 w-4" />} />
-        <Stat label="Hooks in library" value={hookCount} icon={<Quote className="h-4 w-4" />} />
+        <Stat label={t("home.stat.ideas")} value={ideaCount} icon={<Bookmark className="h-4 w-4" />} />
+        <Stat label={t("home.stat.hooks")} value={hookCount} icon={<Quote className="h-4 w-4" />} />
       </section>
 
       {hookOfDay && (
         <section className="rounded-2xl border border-border/60 bg-card p-4">
           <div className="text-[10px] uppercase tracking-widest text-muted-foreground">
-            Hook of the day
+            {t("home.hook_of_day")}
           </div>
           <p className="mt-1 text-lg font-medium leading-snug text-primary-glow">
             "{hookOfDay}"
           </p>
           <Link to="/hooks" className="mt-2 inline-block text-xs text-muted-foreground underline">
-            Browse hook library →
+            {t("home.browse_hooks")}
           </Link>
         </section>
       )}
 
       <section>
         <div className="mb-2 flex items-center justify-between">
-          <h2 className="text-sm font-semibold">Recent ideas</h2>
+          <h2 className="text-sm font-semibold">{t("home.recent")}</h2>
           <Link to="/saved" className="text-xs text-muted-foreground underline">
-            See all
+            {t("home.see_all")}
           </Link>
         </div>
         {recent.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-border/60 p-6 text-center text-sm text-muted-foreground">
-            Belum ada ideas. Generate dulu yuk.
+            {t("home.empty")}
           </div>
         ) : (
           <ul className="space-y-2">
