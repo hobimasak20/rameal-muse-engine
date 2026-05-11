@@ -35,9 +35,11 @@ type Style = (typeof STORYBOARD_STYLES)[number];
 export function StoryboardDialog({
   idea,
   durationSec = 30,
+  language = "id",
 }: {
   idea: Idea;
   durationSec?: number;
+  language?: "en" | "id";
 }) {
   const fn = useServerFn(generateStoryboard);
   const [open, setOpen] = useState(false);
@@ -58,6 +60,7 @@ export function StoryboardDialog({
           ending: idea.ending,
           durationSec,
           style,
+          language,
         },
       });
       if (!res.ok) {
