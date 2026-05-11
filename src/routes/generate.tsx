@@ -34,6 +34,7 @@ export const Route = createFileRoute("/generate")({
 
 function GeneratePage() {
   const fn = useServerFn(generateIdeas);
+  const { lang, t } = useLang();
   const { topic: initialTopic } = Route.useSearch();
   const [topic, setTopic] = useState(initialTopic);
   useEffect(() => {
@@ -45,25 +46,25 @@ function GeneratePage() {
   const [viralBoost, setViralBoost] = useState(false);
   const [loading, setLoading] = useState(false);
   const [ideas, setIdeas] = useState<Idea[]>([]);
-  const [ctx, setCtx] = useState<{ topic: string; tone: Tone; viralBoost: boolean; durationSec: number } | null>(null);
+  const [ctx, setCtx] = useState<{ topic: string; tone: Tone; viralBoost: boolean; durationSec: number; language: "en" | "id" } | null>(null);
 
   async function onGenerate() {
     if (!topic.trim()) {
-      toast.error("Tulis topic dulu");
+      toast.error(t("gen.need_topic"));
       return;
     }
     setLoading(true);
     setIdeas([]);
     try {
-      const res = await fn({ data: { topic: topic.trim(), tone, count, viralBoost, durationSec } });
+      const res = await fn({ data: { topic: topic.trim(), tone, count, viralBoost, durationSec, language: lang } });
       if (!res.ok) {
         toast.error(res.error);
         return;
       }
       setIdeas(res.ideas);
-      setCtx({ topic: res.topic, tone: res.tone as Tone, viralBoost: res.viralBoost, durationSec: res.durationSec });
+      setCtx({ topic: res.topic, tone: res.tone as Tone, viralBoost: res.viralBoost, durationSec: res.durationSec, language: res.language });
     } catch (e) {
-      toast.error("Generation failed");
+      toast.error(t("gen.failed"));
       console.error(e);
     } finally {
       setLoading(false);
@@ -73,9 +74,9 @@ function GeneratePage() {
   return (
     <div className="space-y-5">
       <header>
-        <h1 className="text-2xl font-bold tracking-tight">Generate</h1>
+        <h1 className="text-2xl font-bold tracking-tight">{t("gen.title")}</h1>
         <p className="text-sm text-muted-foreground">
-          Topic + tone → script in Wandy POV voice.
+          {t("gen.subtitle")}
         </p>
       </header>
 
