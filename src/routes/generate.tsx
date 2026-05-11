@@ -12,6 +12,7 @@ import { Slider } from "@/components/ui/slider";
 import { generateIdeas } from "@/lib/generate.functions";
 import { IdeaCard, type Idea } from "@/components/IdeaCard";
 import { cn } from "@/lib/utils";
+import { useLang } from "@/i18n/LanguageProvider";
 
 const TONES = ["Honest", "Sarcastic", "Confused", "Mindblown", "Frustrated", "Comedy", "Twist", "Informative"] as const;
 type Tone = (typeof TONES)[number];
