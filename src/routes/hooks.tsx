@@ -480,11 +480,12 @@ type Mode = (typeof MODES)[number]["id"];
 
 function AIHooksDialog({ onSave }: { onSave: (text: string, category: string) => void }) {
   const fn = useServerFn(enhanceHooks);
+  const { lang } = useLang();
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<Mode>("generate");
   const [hook, setHook] = useState("");
   const [niche, setNiche] = useState("Korean food content");
-  const [language, setLanguage] = useState("Bahasa Indonesia");
+  const [language, setLanguage] = useState(lang === "en" ? "English" : "Bahasa Indonesia");
   const [results, setResults] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -493,7 +494,7 @@ function AIHooksDialog({ onSave }: { onSave: (text: string, category: string) =>
     setResults([]);
     try {
       const res = await fn({
-        data: { mode, hook, niche, language, count: 5 },
+        data: { mode, hook, niche, language, appLanguage: lang, count: 5 },
       });
       if (!res.ok) {
         toast.error(res.error);
