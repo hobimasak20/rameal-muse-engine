@@ -16,7 +16,7 @@ export const Route = createFileRoute("/saved")({
   component: SavedPage,
 });
 
-type Row = Idea & { id: string; created_at: string; tone: string };
+type Row = Idea & { id: string; created_at: string; tone: string; language?: "en" | "id" };
 
 function SavedPage() {
   const [items, setItems] = useState<Row[]>([]);
@@ -68,7 +68,7 @@ function SavedPage() {
         <ul className="space-y-3">
           {items.map((i) => (
             <li key={i.id} className="space-y-2">
-              <IdeaCard idea={i} />
+              <IdeaCard idea={i} context={{ topic: "", tone: i.tone, viralBoost: false, language: i.language ?? "id" }} />
               <div className="flex justify-end">
                 <Button
                   size="sm"

@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/dialog";
 import { enhanceHooks } from "@/lib/hooks.functions";
 import { cn } from "@/lib/utils";
+import { useLang } from "@/i18n/LanguageProvider";
 
 export const Route = createFileRoute("/hooks")({
   head: () => ({
@@ -50,6 +51,7 @@ type Hook = {
   use_count: number;
   last_used_at: string | null;
   created_at: string;
+  language: string;
 };
 
 const SUGGESTED_CATEGORIES = [
@@ -73,6 +75,7 @@ const SUGGESTED_CATEGORIES = [
 
 function HooksPage() {
   const navigate = useNavigate();
+  const { lang, t } = useLang();
   const [items, setItems] = useState<Hook[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeCat, setActiveCat] = useState<string>("all");
@@ -88,6 +91,7 @@ function HooksPage() {
     const { data, error } = await supabase
       .from("hooks")
       .select("*")
+      .eq("language", lang)
       .order("created_at", { ascending: false });
     if (error) toast.error("Couldn't load hooks");
     setItems((data as Hook[]) ?? []);
@@ -96,7 +100,8 @@ function HooksPage() {
 
   useEffect(() => {
     load();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lang]);
 
   const categories = useMemo(() => {
     const s = new Set<string>(items.map((i) => i.category));
@@ -132,13 +137,13 @@ function HooksPage() {
     if (!text) return;
     const { data, error } = await supabase
       .from("hooks")
-      .insert({ text, category: newCat.trim() || "general", source: "user" })
+      .insert({ text, category: newCat.trim() || "general", source: "user", language: lang })
       .select("*")
       .single();
     if (error || !data) return toast.error("Couldn't add hook");
     setItems((prev) => [data as Hook, ...prev]);
     setNewHook("");
-    toast.success("Hook added");
+    toast.success(t("hooks.added"));
   }
 
   async function removeHook(id: string) {
@@ -180,7 +185,7 @@ function HooksPage() {
   async function saveGenerated(text: string, category: string) {
     const { data, error } = await supabase
       .from("hooks")
-      .insert({ text, category, source: "ai", emotion: "Curiosity", content_type: "Reels" })
+      .insert({ text, category, source: "ai", emotion: "Curiosity", content_type: "Reels", language: lang })
       .select("*")
       .single();
     if (error || !data) {
@@ -188,15 +193,15 @@ function HooksPage() {
       return;
     }
     setItems((p) => [data as Hook, ...p]);
-    toast.success("Saved to library");
+    toast.success(t("hooks.saved_lib"));
   }
 
   return (
     <div className="space-y-5 pb-12">
       <header>
-        <h1 className="text-3xl font-black tracking-tight">Hook library</h1>
+        <h1 className="text-3xl font-black tracking-tight">{t("hooks.title")}</h1>
         <p className="text-sm text-muted-foreground">
-          {items.length} hooks · {items.filter((i) => i.favorite).length} favorites · tap any card to use it.
+          {items.length} {t("hooks.subtitle_a")} · {items.filter((i) => i.favorite).length} {t("hooks.subtitle_b")}
         </p>
       </header>
 
@@ -475,11 +480,12 @@ type Mode = (typeof MODES)[number]["id"];
 
 function AIHooksDialog({ onSave }: { onSave: (text: string, category: string) => void }) {
   const fn = useServerFn(enhanceHooks);
+  const { lang } = useLang();
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<Mode>("generate");
   const [hook, setHook] = useState("");
   const [niche, setNiche] = useState("Korean food content");
-  const [language, setLanguage] = useState("Bahasa Indonesia");
+  const [language, setLanguage] = useState(lang === "en" ? "English" : "Bahasa Indonesia");
   const [results, setResults] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -488,7 +494,7 @@ function AIHooksDialog({ onSave }: { onSave: (text: string, category: string) =>
     setResults([]);
     try {
       const res = await fn({
-        data: { mode, hook, niche, language, count: 5 },
+        data: { mode, hook, niche, language, appLanguage: lang, count: 5 },
       });
       if (!res.ok) {
         toast.error(res.error);

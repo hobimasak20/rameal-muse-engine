@@ -12,6 +12,7 @@ import { Slider } from "@/components/ui/slider";
 import { generateIdeas } from "@/lib/generate.functions";
 import { IdeaCard, type Idea } from "@/components/IdeaCard";
 import { cn } from "@/lib/utils";
+import { useLang } from "@/i18n/LanguageProvider";
 
 const TONES = ["Honest", "Sarcastic", "Confused", "Mindblown", "Frustrated", "Comedy", "Twist", "Informative"] as const;
 type Tone = (typeof TONES)[number];
@@ -33,6 +34,7 @@ export const Route = createFileRoute("/generate")({
 
 function GeneratePage() {
   const fn = useServerFn(generateIdeas);
+  const { lang, t } = useLang();
   const { topic: initialTopic } = Route.useSearch();
   const [topic, setTopic] = useState(initialTopic);
   useEffect(() => {
@@ -44,25 +46,25 @@ function GeneratePage() {
   const [viralBoost, setViralBoost] = useState(false);
   const [loading, setLoading] = useState(false);
   const [ideas, setIdeas] = useState<Idea[]>([]);
-  const [ctx, setCtx] = useState<{ topic: string; tone: Tone; viralBoost: boolean; durationSec: number } | null>(null);
+  const [ctx, setCtx] = useState<{ topic: string; tone: Tone; viralBoost: boolean; durationSec: number; language: "en" | "id" } | null>(null);
 
   async function onGenerate() {
     if (!topic.trim()) {
-      toast.error("Tulis topic dulu");
+      toast.error(t("gen.need_topic"));
       return;
     }
     setLoading(true);
     setIdeas([]);
     try {
-      const res = await fn({ data: { topic: topic.trim(), tone, count, viralBoost, durationSec } });
+      const res = await fn({ data: { topic: topic.trim(), tone, count, viralBoost, durationSec, language: lang } });
       if (!res.ok) {
         toast.error(res.error);
         return;
       }
       setIdeas(res.ideas);
-      setCtx({ topic: res.topic, tone: res.tone as Tone, viralBoost: res.viralBoost, durationSec: res.durationSec });
+      setCtx({ topic: res.topic, tone: res.tone as Tone, viralBoost: res.viralBoost, durationSec: res.durationSec, language: res.language });
     } catch (e) {
-      toast.error("Generation failed");
+      toast.error(t("gen.failed"));
       console.error(e);
     } finally {
       setLoading(false);
@@ -72,21 +74,21 @@ function GeneratePage() {
   return (
     <div className="space-y-5">
       <header>
-        <h1 className="text-2xl font-bold tracking-tight">Generate</h1>
+        <h1 className="text-2xl font-bold tracking-tight">{t("gen.title")}</h1>
         <p className="text-sm text-muted-foreground">
-          Topic + tone → script in Wandy POV voice.
+          {t("gen.subtitle")}
         </p>
       </header>
 
       <section className="space-y-4 rounded-2xl border border-border/60 bg-card p-4">
         <div>
           <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
-            Topic
+            {t("gen.topic")}
           </label>
           <Textarea
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
-            placeholder="contoh: harga groceries di Sydney vs Jakarta, atau random thought tentang antri di MRT"
+            placeholder={t("gen.topic_placeholder")}
             rows={3}
             className="mt-1 resize-none border-border/60 bg-background/40"
           />
@@ -94,7 +96,7 @@ function GeneratePage() {
 
         <div>
           <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
-            Tone
+            {t("gen.tone")}
           </label>
           <div className="mt-2 flex flex-wrap gap-1.5">
             {TONES.map((t) => (
@@ -117,7 +119,7 @@ function GeneratePage() {
         <div>
           <div className="flex items-center justify-between">
             <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
-              Number of ideas
+              {t("gen.count")}
             </label>
             <span className="text-sm font-semibold">{count}</span>
           </div>
@@ -134,7 +136,7 @@ function GeneratePage() {
         <div>
           <div className="flex items-center justify-between">
             <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
-              <Clock className="h-3 w-3" /> Script duration
+              <Clock className="h-3 w-3" /> {t("gen.duration")}
             </label>
             <span className="text-sm font-semibold">
               {durationSec < 60 ? `${durationSec}s` : `${Math.floor(durationSec / 60)}m${durationSec % 60 ? ` ${durationSec % 60}s` : ""}`}
@@ -172,9 +174,9 @@ function GeneratePage() {
               className={cn("h-4 w-4", viralBoost ? "text-primary" : "text-muted-foreground")}
             />
             <div>
-              <div className="text-sm font-medium">Viral boost</div>
+              <div className="text-sm font-medium">{t("gen.viral")}</div>
               <div className="text-[11px] text-muted-foreground">
-                Stronger curiosity, edgier tension
+                {t("gen.viral_hint")}
               </div>
             </div>
           </div>
@@ -189,11 +191,11 @@ function GeneratePage() {
         >
           {loading ? (
             <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Thinking...
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t("gen.thinking")}
             </>
           ) : (
             <>
-              <Sparkles className="mr-2 h-4 w-4" /> Generate {count} idea{count > 1 ? "s" : ""}
+              <Sparkles className="mr-2 h-4 w-4" /> {t("gen.button")} {count} {count > 1 ? t("gen.button_ideas") : t("gen.button_idea")}
             </>
           )}
         </Button>

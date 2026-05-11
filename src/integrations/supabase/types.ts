@@ -22,6 +22,7 @@ export type Database = {
           emotion: string
           favorite: boolean
           id: string
+          language: string
           last_used_at: string | null
           source: string
           text: string
@@ -34,6 +35,7 @@ export type Database = {
           emotion?: string
           favorite?: boolean
           id?: string
+          language?: string
           last_used_at?: string | null
           source?: string
           text: string
@@ -46,6 +48,7 @@ export type Database = {
           emotion?: string
           favorite?: boolean
           id?: string
+          language?: string
           last_used_at?: string | null
           source?: string
           text?: string
@@ -63,6 +66,7 @@ export type Database = {
           hashtags: string[]
           hook: string
           id: string
+          language: string
           title: string
           tone: string
           topic: string
@@ -77,6 +81,7 @@ export type Database = {
           hashtags?: string[]
           hook: string
           id?: string
+          language?: string
           title: string
           tone: string
           topic: string
@@ -91,6 +96,7 @@ export type Database = {
           hashtags?: string[]
           hook?: string
           id?: string
+          language?: string
           title?: string
           tone?: string
           topic?: string
