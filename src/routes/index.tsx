@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Sparkles, Bookmark, Quote, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { useLang } from "@/i18n/LanguageProvider";
 
 export const Route = createFileRoute("/")({
   head: () => ({
