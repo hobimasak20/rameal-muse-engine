@@ -38,6 +38,7 @@ const InputSchema = z.object({
   ending: z.string(),
   durationSec: z.number().int().min(10).max(120).default(30),
   style: z.enum(STYLES).default("Cinematic"),
+  language: z.enum(["en", "id"]).default("id"),
 });
 
 const STYLE_GUIDE: Record<string, string> = {
