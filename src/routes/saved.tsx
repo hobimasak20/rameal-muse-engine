@@ -16,7 +16,7 @@ export const Route = createFileRoute("/saved")({
   component: SavedPage,
 });
 
-type Row = Idea & { id: string; created_at: string; tone: string };
+type Row = Idea & { id: string; created_at: string; tone: string; language?: "en" | "id" };
 
 function SavedPage() {
   const [items, setItems] = useState<Row[]>([]);
