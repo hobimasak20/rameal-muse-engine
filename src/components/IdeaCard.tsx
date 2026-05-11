@@ -144,7 +144,7 @@ export function IdeaCard({
       </div>
 
       <div className="mt-2">
-        <StoryboardDialog idea={idea} durationSec={effectiveDuration} />
+        <StoryboardDialog idea={idea} durationSec={effectiveDuration} language={effectiveLanguage} />
       </div>
     </article>
   );
