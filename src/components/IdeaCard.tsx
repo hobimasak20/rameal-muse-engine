@@ -39,11 +39,12 @@ export function IdeaCard({
   durationSec,
 }: {
   idea: Idea;
-  context?: { topic: string; tone: string; viralBoost: boolean; durationSec?: number };
+  context?: { topic: string; tone: string; viralBoost: boolean; durationSec?: number; language?: "en" | "id" };
   onSaved?: (id: string) => void;
   durationSec?: number;
 }) {
   const effectiveDuration = durationSec ?? context?.durationSec ?? 30;
+  const effectiveLanguage = context?.language ?? (idea as Idea & { language?: "en" | "id" }).language ?? "id";
   const [savedId, setSavedId] = useState<string | undefined>(idea.id);
   const [savingHook, setSavingHook] = useState(false);
 
@@ -62,6 +63,7 @@ export function IdeaCard({
         ending: idea.ending,
         caption: idea.caption,
         hashtags: idea.hashtags,
+        language: effectiveLanguage,
       })
       .select("id")
       .single();
@@ -75,7 +77,7 @@ export function IdeaCard({
     setSavingHook(true);
     const { error } = await supabase
       .from("hooks")
-      .insert({ text: idea.hook, category: "generated", source: "generated" });
+      .insert({ text: idea.hook, category: "generated", source: "generated", language: effectiveLanguage });
     setSavingHook(false);
     if (error) return toast.error("Couldn't save hook");
     toast.success("Hook saved to library");
