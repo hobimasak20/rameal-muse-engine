@@ -64,7 +64,7 @@ export const enhanceHooks = createServerFn({ method: "POST" })
       const model = gateway("google/gemini-3-flash-preview");
       const { text } = await generateText({
         model,
-        system: SYSTEM,
+        system: systemFor(data.appLanguage, data.mode),
         temperature: 0.9,
         maxOutputTokens: 1200,
         prompt: MODE_PROMPT[data.mode](data) + `\n\nReturn ONLY JSON. No markdown.`,
