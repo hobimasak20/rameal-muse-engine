@@ -51,6 +51,7 @@ type Hook = {
   use_count: number;
   last_used_at: string | null;
   created_at: string;
+  language: string;
 };
 
 const SUGGESTED_CATEGORIES = [
