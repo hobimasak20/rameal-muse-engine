@@ -185,7 +185,7 @@ function HooksPage() {
   async function saveGenerated(text: string, category: string) {
     const { data, error } = await supabase
       .from("hooks")
-      .insert({ text, category, source: "ai", emotion: "Curiosity", content_type: "Reels" })
+      .insert({ text, category, source: "ai", emotion: "Curiosity", content_type: "Reels", language: lang })
       .select("*")
       .single();
     if (error || !data) {
@@ -193,15 +193,15 @@ function HooksPage() {
       return;
     }
     setItems((p) => [data as Hook, ...p]);
-    toast.success("Saved to library");
+    toast.success(t("hooks.saved_lib"));
   }
 
   return (
     <div className="space-y-5 pb-12">
       <header>
-        <h1 className="text-3xl font-black tracking-tight">Hook library</h1>
+        <h1 className="text-3xl font-black tracking-tight">{t("hooks.title")}</h1>
         <p className="text-sm text-muted-foreground">
-          {items.length} hooks · {items.filter((i) => i.favorite).length} favorites · tap any card to use it.
+          {items.length} {t("hooks.subtitle_a")} · {items.filter((i) => i.favorite).length} {t("hooks.subtitle_b")}
         </p>
       </header>
 
