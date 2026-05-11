@@ -10,6 +10,7 @@ const InputSchema = z.object({
   hook: z.string().max(500).optional(),
   niche: z.string().max(200).optional(),
   language: z.string().max(40).optional(),
+  appLanguage: z.enum(["en", "id"]).default("id"),
   count: z.number().int().min(1).max(10).default(5),
 });
 
@@ -21,15 +22,24 @@ const MODE_PROMPT: Record<(typeof MODES)[number], (d: z.infer<typeof InputSchema
   shorten: (d) =>
     `Shorten this hook to under 8 words while keeping its punch. Give ${d.count} variations. Hook: "${d.hook}"`,
   translate: (d) =>
-    `Translate this hook to ${d.language || "Bahasa Indonesia"} while keeping it punchy and natural for spoken short-form video. Give ${d.count} variations. Hook: "${d.hook}"`,
+    `Translate this hook to ${d.language || (d.appLanguage === "en" ? "English" : "Bahasa Indonesia")} while keeping it punchy and natural for spoken short-form video. Give ${d.count} variations. Hook: "${d.hook}"`,
   generate: (d) =>
     `Generate ${d.count} brand-new viral short-form hooks for this niche: "${d.niche || "general lifestyle"}". Mix categories (POV, Curiosity, Shock, Storytelling, Comedy, Relatable). Each hook must be a single line, scroll-stopping, under 14 words.`,
 };
 
-const SYSTEM = `You are a short-form viral hook writer for TikTok and Reels.
+function systemFor(appLanguage: "en" | "id", mode: (typeof MODES)[number]): string {
+  const langName = appLanguage === "en" ? "English" : "Bahasa Indonesia";
+  // Translate mode picks the user-supplied target language inside MODE_PROMPT itself.
+  const langRule =
+    mode === "translate"
+      ? `Output language is whatever the user requested in the prompt.`
+      : `Write EVERY hook entirely in ${langName}. Do NOT mix languages — no English words inside Indonesian hooks (and vice versa) unless they are universally accepted brand names like "TikTok" or "Reels".`;
+  return `You are a short-form viral hook writer for TikTok and Reels.
 Write hooks the way top creators do: punchy, scroll-stopping, in spoken rhythm, no hashtags, no quotes, no numbering.
+${langRule}
 Return ONLY valid JSON in this exact shape:
 {"hooks":["hook 1","hook 2"]}`;
+}
 
 function extractJson(text: string): unknown {
   const cleaned = text.replace(/```json\s*/gi, "").replace(/```/g, "").trim();
