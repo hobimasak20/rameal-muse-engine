@@ -70,21 +70,26 @@ export const generateStoryboard = createServerFn({ method: "POST" })
     const fullScript = `HOOK: ${data.hook}\nFORESHADOW: ${data.foreshadow}\nBODY: ${data.body}\nENDING: ${data.ending}`;
     const sceneCount = Math.max(4, Math.min(12, Math.round(data.durationSec / 3)));
 
+    const langName = data.language === "en" ? "English" : "Bahasa Indonesia";
     const system = `You are a Reels/TikTok storyboard director. Convert a spoken script into a shot-by-shot storyboard optimized for retention on vertical short-form video.
 
 # Style: ${data.style}
 ${STYLE_GUIDE[data.style]}
 
+# OUTPUT LANGUAGE — STRICT
+Write EVERY field (script, shotType, cameraAngle, cameraMovement, visualDirection, bRoll, textOverlay, expression, transition) entirely in ${langName}.
+DO NOT mix languages. Keep universally accepted production terms (close-up, push-in, etc.) only if they're standard in ${langName} creator vocabulary; otherwise translate naturally.
+
 # Rules
 - Total runtime: ~${data.durationSec}s. Break into ~${sceneCount} shots, each 1.5–4s.
 - First shot must be a strong visual hook (scroll-stopper) within the first 2s.
 - Pace ramps with the script. Action/visual interest changes every shot.
-- "script" field must quote the exact spoken line (or a short slice of it) playing during that shot. Do NOT invent new dialogue.
+- "script" field must quote the exact spoken line (or a short slice of it) playing during that shot, in ${langName}. Do NOT invent new dialogue.
 - Suggest concrete, easy-to-film shots a solo creator can shoot on a phone.
 - Camera angle: front cam / top-down / low angle / over-the-shoulder / wide / close-up etc.
 - Camera movement: static / push-in / pull-out / pan / whip pan / handheld / gimbal walk / orbit.
 - bRoll: 1 short concrete b-roll idea (or "—" if the talking shot stays on screen).
-- textOverlay: short on-screen text caption for that shot (or "—").
+- textOverlay: short on-screen text caption for that shot in ${langName} (or "—").
 - expression: facial expression / emotion the creator should perform.
 - transition: how to cut into the NEXT shot (hard cut / match cut / whip / zoom / J-cut etc.). Last shot can use "end card".
 - "time" format: "0–2s", "2–4s" etc., contiguous, ending at ~${data.durationSec}s.`;
