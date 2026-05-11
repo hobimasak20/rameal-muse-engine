@@ -19,6 +19,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
+  const { lang, t } = useLang();
   const [ideaCount, setIdeaCount] = useState<number | null>(null);
   const [hookCount, setHookCount] = useState<number | null>(null);
   const [hookOfDay, setHookOfDay] = useState<string | null>(null);
@@ -27,21 +28,23 @@ function Home() {
   useEffect(() => {
     (async () => {
       const [{ count: ic }, { count: hc }, { data: hooks }, { data: ideas }] = await Promise.all([
-        supabase.from("ideas").select("*", { count: "exact", head: true }),
-        supabase.from("hooks").select("*", { count: "exact", head: true }),
-        supabase.from("hooks").select("text").limit(50),
+        supabase.from("ideas").select("*", { count: "exact", head: true }).eq("language", lang),
+        supabase.from("hooks").select("*", { count: "exact", head: true }).eq("language", lang),
+        supabase.from("hooks").select("text").eq("language", lang).limit(50),
         supabase
           .from("ideas")
           .select("id,title,tone")
+          .eq("language", lang)
           .order("created_at", { ascending: false })
           .limit(3),
       ]);
       setIdeaCount(ic ?? 0);
       setHookCount(hc ?? 0);
       if (hooks && hooks.length) setHookOfDay(hooks[Math.floor(Math.random() * hooks.length)].text);
+      else setHookOfDay(null);
       setRecent(ideas ?? []);
     })();
-  }, []);
+  }, [lang]);
 
   return (
     <div className="space-y-5">
