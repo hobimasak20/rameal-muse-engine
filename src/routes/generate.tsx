@@ -174,9 +174,9 @@ function GeneratePage() {
               className={cn("h-4 w-4", viralBoost ? "text-primary" : "text-muted-foreground")}
             />
             <div>
-              <div className="text-sm font-medium">Viral boost</div>
+              <div className="text-sm font-medium">{t("gen.viral")}</div>
               <div className="text-[11px] text-muted-foreground">
-                Stronger curiosity, edgier tension
+                {t("gen.viral_hint")}
               </div>
             </div>
           </div>
@@ -191,11 +191,11 @@ function GeneratePage() {
         >
           {loading ? (
             <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Thinking...
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t("gen.thinking")}
             </>
           ) : (
             <>
-              <Sparkles className="mr-2 h-4 w-4" /> Generate {count} idea{count > 1 ? "s" : ""}
+              <Sparkles className="mr-2 h-4 w-4" /> {t("gen.button")} {count} {count > 1 ? t("gen.button_ideas") : t("gen.button_idea")}
             </>
           )}
         </Button>
