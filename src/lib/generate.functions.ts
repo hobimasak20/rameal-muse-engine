@@ -115,25 +115,42 @@ ${personaBlock}
 ${(() => {
   const s = buildStructure(data.durationSec);
   const wordTarget = Math.round(data.durationSec * 2.5); // ~150 wpm spoken
+  const isEn = data.language === "en";
+  const hookExamples = isEn
+    ? `"Nobody talks about this in...", "You'd be shocked if...", "Stop saying ... before you know this".`
+    : `"Orang nggak kasih tau di...", "Kamu pasti kaget kalo...", "Stop bilang ... sebelum lo tau ini".`;
+  const bodyHint = isEn
+    ? "observation or experience, expectation vs reality, cultural comparison (Australia ↔ Indonesia when relevant), micro-details: prices (in $ AUD or Rp), behaviors, systems, food, environment."
+    : "observation atau pengalaman, expectation vs reality, perbandingan budaya (Australia ↔ Indonesia kalau relevan), micro-details: harga (dalam $ AUD atau Rp), behavior, sistem, makanan, environment.";
+  const hashtagsHint = isEn
+    ? "max 5, lowercase, English-friendly travel/lifestyle tags."
+    : "max 5, lowercase, mix Bahasa Indonesia + travel relevant.";
   return `# Target script length
 Total duration: ~${s.total} seconds (~${wordTarget} spoken words across HOOK + FORESHADOW + BODY + ENDING combined). Pace and density should match this length — for longer scripts add more concrete beats, examples, micro-stories, and comparisons. Do NOT pad with filler.
 
 # Required structure for every idea
-- HOOK (0–${s.hookEnd}s): strong pattern interrupt, curiosity or emotional trigger, reverse psychology preferred. Example openers: "Orang nggak kasih tau di...", "Kamu pasti kaget kalo...", "Stop bilang ... sebelum lo tau ini".
+- HOOK (0–${s.hookEnd}s): strong pattern interrupt, curiosity or emotional trigger, reverse psychology preferred. Example openers: ${hookExamples}
 - FORESHADOW (${s.hookEnd}–${s.foreEnd}s): hint at something surprising, create a curiosity gap.
-- BODY (${s.foreEnd}–${s.bodyEnd}s): observation or experience, expectation vs reality, cultural comparison (Australia ↔ Indonesia when relevant), micro-details: prices (in $ AUD or Rp), behaviors, systems, food, environment.
+- BODY (${s.foreEnd}–${s.bodyEnd}s): ${bodyHint}
 - ENDING (${s.bodyEnd}–${s.total}s): memorable closing, slight sarcasm or truth bomb, optional subtle CTA.
 - CAPTION: 1–2 punchy sentences in the same voice, can include 1 emoji max.
-- HASHTAGS: max 5, lowercase, mix Indo + travel relevant.`;
+- HASHTAGS: ${hashtagsHint}`;
 })()}
 
 # Voice
-Casual Bahasa Indonesia with optional natural English mix. Short, punchy, spoken rhythm. Avoid generic travel content, fake hype, corporate writing.
+${data.language === "en"
+  ? "Natural conversational English, TikTok/Reels creator rhythm. Short, punchy, spoken rhythm. Avoid generic travel content, fake hype, corporate writing."
+  : "Casual Bahasa Indonesia, natural creator tone, spoken rhythm. Short, punchy. Avoid generic travel content, fake hype, corporate writing."}
 
 # Tone for this batch
 ${TONE_GUIDE[data.tone]}
 
 ${data.viralBoost ? "# Viral Boost ON\nIncrease curiosity gap, emotional tension, and slightly controversial edge. Stay safe for social media — no hate, no slurs, no targeted attacks." : ""}
+
+# OUTPUT LANGUAGE — STRICT
+Write EVERY field (title, hook, foreshadow, body, ending, caption, hashtags) entirely in ${data.language === "en" ? "English" : "Bahasa Indonesia"}.
+DO NOT mix languages. Do not insert words from another language unless they are universally accepted loanwords (brand names, "TikTok", "Reels", currency symbols).
+${data.language === "en" ? "If the topic is written in Indonesian, translate the meaning naturally into English." : "Kalau topic-nya in English, terjemahin maknanya ke Bahasa Indonesia natural — bukan word-for-word."}
 
 Return ${data.count} distinct, non-repetitive ideas. Each TITLE must be a short internal label (4–7 words), not a hashtag.`;
 
@@ -146,7 +163,7 @@ Return ${data.count} distinct, non-repetitive ideas. Each TITLE must be a short 
         system,
         temperature: 0.8,
         maxOutputTokens: 8192,
-        prompt: `Topic: ${data.topic}\n\nGenerate ${data.count} ideas now. Return ONLY valid JSON. No markdown. No explanation. Use this exact shape:\n{"ideas":[{"title":"","hook":"","foreshadow":"","body":"","ending":"","caption":"","hashtags":[""]}]}`,
+        prompt: `Topic: ${data.topic}\n\nGenerate ${data.count} ideas now in ${data.language === "en" ? "English" : "Bahasa Indonesia"}. Return ONLY valid JSON. No markdown. No explanation. Use this exact shape:\n{"ideas":[{"title":"","hook":"","foreshadow":"","body":"","ending":"","caption":"","hashtags":[""]}]}`,
       });
 
       const parsed = ResultSchema.partial().passthrough().parse(extractJson(text));
@@ -156,7 +173,7 @@ Return ${data.count} distinct, non-repetitive ideas. Each TITLE must be a short 
         throw new Error("AI returned no ideas");
       }
 
-      return { ok: true as const, ideas, topic: data.topic, tone: data.tone, viralBoost: data.viralBoost, durationSec: data.durationSec };
+      return { ok: true as const, ideas, topic: data.topic, tone: data.tone, viralBoost: data.viralBoost, durationSec: data.durationSec, language: data.language };
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
       console.error("generateIdeas error:", msg);
