@@ -100,11 +100,19 @@ function PersonaPage() {
   return (
     <div className="space-y-5">
       <header>
-        <h1 className="text-2xl font-bold tracking-tight">Persona</h1>
+        <h1 className="text-2xl font-bold tracking-tight">{t("persona.title")}</h1>
         <p className="text-sm text-muted-foreground">
-          This is fed into every generation. Edit it to change how RameAL thinks.
+          {t("persona.subtitle")}
         </p>
       </header>
+
+      <section className="rounded-2xl border border-border/60 bg-card p-4">
+        <div className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+          {t("settings.language")}
+        </div>
+        <p className="mt-1 text-xs text-muted-foreground">{t("settings.language_hint")}</p>
+        <div className="mt-3"><LanguageSwitcher variant="full" /></div>
+      </section>
 
       <section className="space-y-4 rounded-2xl border border-border/60 bg-card p-4">
         <Field label="Creator name">
