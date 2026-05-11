@@ -24,6 +24,7 @@ const InputSchema = z.object({
   count: z.number().int().min(1).max(10),
   viralBoost: z.boolean(),
   durationSec: z.number().int().min(10).max(120).default(30),
+  language: z.enum(["en", "id"]).default("id"),
 });
 
 function buildStructure(duration: number) {
