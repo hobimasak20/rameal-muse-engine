@@ -83,12 +83,12 @@ function GeneratePage() {
       <section className="space-y-4 rounded-2xl border border-border/60 bg-card p-4">
         <div>
           <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
-            Topic
+            {t("gen.topic")}
           </label>
           <Textarea
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
-            placeholder="contoh: harga groceries di Sydney vs Jakarta, atau random thought tentang antri di MRT"
+            placeholder={t("gen.topic_placeholder")}
             rows={3}
             className="mt-1 resize-none border-border/60 bg-background/40"
           />
@@ -96,7 +96,7 @@ function GeneratePage() {
 
         <div>
           <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
-            Tone
+            {t("gen.tone")}
           </label>
           <div className="mt-2 flex flex-wrap gap-1.5">
             {TONES.map((t) => (
