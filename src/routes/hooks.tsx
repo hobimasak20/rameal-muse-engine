@@ -75,6 +75,7 @@ const SUGGESTED_CATEGORIES = [
 
 function HooksPage() {
   const navigate = useNavigate();
+  const { lang, t } = useLang();
   const [items, setItems] = useState<Hook[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeCat, setActiveCat] = useState<string>("all");
@@ -90,6 +91,7 @@ function HooksPage() {
     const { data, error } = await supabase
       .from("hooks")
       .select("*")
+      .eq("language", lang)
       .order("created_at", { ascending: false });
     if (error) toast.error("Couldn't load hooks");
     setItems((data as Hook[]) ?? []);
@@ -98,7 +100,8 @@ function HooksPage() {
 
   useEffect(() => {
     load();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lang]);
 
   const categories = useMemo(() => {
     const s = new Set<string>(items.map((i) => i.category));
