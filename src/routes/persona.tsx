@@ -6,6 +6,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { useLang } from "@/i18n/LanguageProvider";
 
 export const Route = createFileRoute("/persona")({
   head: () => ({
