@@ -21,6 +21,7 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const { lang, t } = useLang();
+  const { name } = usePersona();
   const [ideaCount, setIdeaCount] = useState<number | null>(null);
   const [hookCount, setHookCount] = useState<number | null>(null);
   const [hookOfDay, setHookOfDay] = useState<string | null>(null);
