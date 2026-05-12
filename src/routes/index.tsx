@@ -55,7 +55,7 @@ function Home() {
         style={{ background: "var(--gradient-primary)" }}
       >
         <div className="text-xs font-semibold uppercase tracking-widest text-primary-foreground/80">
-          {t("home.eyebrow")}
+          {t("home.eyebrow", { name })}
         </div>
         <h1 className="mt-2 text-2xl font-bold leading-tight text-primary-foreground">
           {t("home.title")}
