@@ -19,6 +19,8 @@ type Tone = (typeof TONES)[number];
 
 const generateSearchSchema = z.object({
   topic: fallback(z.string(), "").default(""),
+  autorun: fallback(z.coerce.number().int().min(0).max(1), 0).default(0),
+  intent: fallback(z.enum(["script", "storyboard"]), "script").default("script"),
 });
 
 export const Route = createFileRoute("/generate")({
@@ -35,7 +37,7 @@ export const Route = createFileRoute("/generate")({
 function GeneratePage() {
   const fn = useServerFn(generateIdeas);
   const { lang, t } = useLang();
-  const { topic: initialTopic } = Route.useSearch();
+  const { topic: initialTopic, autorun, intent } = Route.useSearch();
   const [topic, setTopic] = useState(initialTopic);
   useEffect(() => {
     if (initialTopic) setTopic(initialTopic);
@@ -47,6 +49,7 @@ function GeneratePage() {
   const [loading, setLoading] = useState(false);
   const [ideas, setIdeas] = useState<Idea[]>([]);
   const [ctx, setCtx] = useState<{ topic: string; tone: Tone; viralBoost: boolean; durationSec: number; language: "en" | "id" } | null>(null);
+  const [autoStoryboard, setAutoStoryboard] = useState(false);
 
   async function onGenerate() {
     if (!topic.trim()) {
@@ -70,6 +73,17 @@ function GeneratePage() {
       setLoading(false);
     }
   }
+
+  // Autorun when arriving from Hook Library with a prefilled topic.
+  const autoRanRef = useState({ done: false })[0];
+  useEffect(() => {
+    if (autorun === 1 && initialTopic && !autoRanRef.done && !loading) {
+      autoRanRef.done = true;
+      if (intent === "storyboard") setAutoStoryboard(true);
+      onGenerate();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autorun, initialTopic]);
 
   return (
     <div className="space-y-5">
@@ -212,7 +226,12 @@ function GeneratePage() {
       {!loading && ideas.length > 0 && (
         <section className="space-y-3">
           {ideas.map((i, idx) => (
-            <IdeaCard key={idx} idea={i} context={ctx ?? undefined} />
+            <IdeaCard
+              key={idx}
+              idea={i}
+              context={ctx ?? undefined}
+              autoOpenStoryboard={autoStoryboard && idx === 0}
+            />
           ))}
         </section>
       )}

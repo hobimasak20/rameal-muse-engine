@@ -37,11 +37,13 @@ export function IdeaCard({
   context,
   onSaved,
   durationSec,
+  autoOpenStoryboard,
 }: {
   idea: Idea;
   context?: { topic: string; tone: string; viralBoost: boolean; durationSec?: number; language?: "en" | "id" };
   onSaved?: (id: string) => void;
   durationSec?: number;
+  autoOpenStoryboard?: boolean;
 }) {
   const effectiveDuration = durationSec ?? context?.durationSec ?? 30;
   const effectiveLanguage = context?.language ?? (idea as Idea & { language?: "en" | "id" }).language ?? "id";
@@ -144,7 +146,12 @@ export function IdeaCard({
       </div>
 
       <div className="mt-2">
-        <StoryboardDialog idea={idea} durationSec={effectiveDuration} language={effectiveLanguage} />
+        <StoryboardDialog
+          idea={idea}
+          durationSec={effectiveDuration}
+          language={effectiveLanguage}
+          autoOpen={autoOpenStoryboard}
+        />
       </div>
     </article>
   );
