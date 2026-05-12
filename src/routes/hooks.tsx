@@ -14,6 +14,7 @@ import {
   Loader2,
   ArrowRight,
   X,
+  Clapperboard,
 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -177,9 +178,9 @@ function HooksPage() {
     markUsed(h);
   }
 
-  function sendToGenerate(h: Hook) {
+  function sendToGenerate(h: Hook, intent: "script" | "storyboard" = "script") {
     markUsed(h);
-    navigate({ to: "/generate", search: { topic: h.text } });
+    navigate({ to: "/generate", search: { topic: h.text, autorun: 1, intent } });
   }
 
   async function saveGenerated(text: string, category: string) {
@@ -341,7 +342,8 @@ function HooksPage() {
               hook={h}
               onCopy={() => copyHook(h)}
               onToggleFav={() => toggleFavorite(h)}
-              onUse={() => sendToGenerate(h)}
+              onUse={() => sendToGenerate(h, "script")}
+              onStoryboard={() => sendToGenerate(h, "storyboard")}
               onDelete={() => removeHook(h.id)}
             />
           ))}
@@ -389,12 +391,14 @@ function HookCard({
   onCopy,
   onToggleFav,
   onUse,
+  onStoryboard,
   onDelete,
 }: {
   hook: Hook;
   onCopy: () => void;
   onToggleFav: () => void;
   onUse: () => void;
+  onStoryboard: () => void;
   onDelete: () => void;
 }) {
   return (
@@ -432,7 +436,15 @@ function HookCard({
           className="h-8 flex-1 rounded-lg text-xs font-semibold"
           style={{ background: "var(--gradient-primary)", color: "var(--primary-foreground)" }}
         >
-          <Sparkles className="mr-1 h-3 w-3" /> Use hook
+          <Sparkles className="mr-1 h-3 w-3" /> Script
+        </Button>
+        <Button
+          size="sm"
+          variant="secondary"
+          onClick={onStoryboard}
+          className="h-8 flex-1 rounded-lg text-xs font-semibold"
+        >
+          <Clapperboard className="mr-1 h-3 w-3" /> Storyboard
         </Button>
         <Button size="icon" variant="secondary" className="h-8 w-8" onClick={onCopy} aria-label="Copy">
           <Copy className="h-3.5 w-3.5" />
