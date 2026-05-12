@@ -4,7 +4,7 @@ import { DEFAULT_LANG, DICT, type LangCode } from "./dict";
 type Ctx = {
   lang: LangCode;
   setLang: (l: LangCode) => void;
-  t: (key: string) => string;
+  t: (key: string, vars?: Record<string, string | number>) => string;
 };
 
 const LanguageContext = createContext<Ctx | undefined>(undefined);
@@ -36,9 +36,11 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const t = useCallback(
-    (key: string) => {
+    (key: string, vars?: Record<string, string | number>) => {
       const dict = DICT[lang];
-      return dict[key] ?? DICT.en[key] ?? key;
+      const raw = dict[key] ?? DICT.en[key] ?? key;
+      if (!vars) return raw;
+      return raw.replace(/\{(\w+)\}/g, (_, k) => (vars[k] != null ? String(vars[k]) : `{${k}}`));
     },
     [lang]
   );

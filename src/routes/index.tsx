@@ -4,6 +4,7 @@ import { Sparkles, Bookmark, Quote, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useLang } from "@/i18n/LanguageProvider";
+import { usePersona } from "@/i18n/PersonaProvider";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -20,6 +21,7 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const { lang, t } = useLang();
+  const { name } = usePersona();
   const [ideaCount, setIdeaCount] = useState<number | null>(null);
   const [hookCount, setHookCount] = useState<number | null>(null);
   const [hookOfDay, setHookOfDay] = useState<string | null>(null);
@@ -53,7 +55,7 @@ function Home() {
         style={{ background: "var(--gradient-primary)" }}
       >
         <div className="text-xs font-semibold uppercase tracking-widest text-primary-foreground/80">
-          {t("home.eyebrow")}
+          {t("home.eyebrow", { name })}
         </div>
         <h1 className="mt-2 text-2xl font-bold leading-tight text-primary-foreground">
           {t("home.title")}

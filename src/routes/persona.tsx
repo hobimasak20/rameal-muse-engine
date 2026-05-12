@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useLang } from "@/i18n/LanguageProvider";
+import { usePersona } from "@/i18n/PersonaProvider";
 
 export const Route = createFileRoute("/persona")({
   head: () => ({
@@ -30,6 +31,7 @@ type Persona = {
 
 function PersonaPage() {
   const { t } = useLang();
+  const { setName } = usePersona();
   const [p, setP] = useState<Persona | null>(null);
   const [saving, setSaving] = useState(false);
 
@@ -86,6 +88,7 @@ function PersonaPage() {
       .eq("id", p.id);
     setSaving(false);
     if (error) return toast.error("Save failed");
+    setName(p.name);
     toast.success("Persona updated");
   }
 

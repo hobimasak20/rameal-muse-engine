@@ -13,6 +13,7 @@ import { generateIdeas } from "@/lib/generate.functions";
 import { IdeaCard, type Idea } from "@/components/IdeaCard";
 import { cn } from "@/lib/utils";
 import { useLang } from "@/i18n/LanguageProvider";
+import { usePersona } from "@/i18n/PersonaProvider";
 
 const TONES = ["Honest", "Sarcastic", "Confused", "Mindblown", "Frustrated", "Comedy", "Twist", "Informative"] as const;
 type Tone = (typeof TONES)[number];
@@ -37,6 +38,7 @@ export const Route = createFileRoute("/generate")({
 function GeneratePage() {
   const fn = useServerFn(generateIdeas);
   const { lang, t } = useLang();
+  const { name } = usePersona();
   const { topic: initialTopic, autorun, intent } = Route.useSearch();
   const [topic, setTopic] = useState(initialTopic);
   useEffect(() => {
@@ -90,7 +92,7 @@ function GeneratePage() {
       <header>
         <h1 className="text-2xl font-bold tracking-tight">{t("gen.title")}</h1>
         <p className="text-sm text-muted-foreground">
-          {t("gen.subtitle")}
+          {t("gen.subtitle", { name })}
         </p>
       </header>
 

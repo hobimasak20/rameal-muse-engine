@@ -2,6 +2,7 @@ import { Link, useLocation } from "@tanstack/react-router";
 import { Sparkles, Bookmark, Quote, User2, LayoutDashboard } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLang } from "@/i18n/LanguageProvider";
+import { usePersona } from "@/i18n/PersonaProvider";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 const NAV = [
@@ -15,6 +16,7 @@ const NAV = [
 export function AppShell({ children }: { children: React.ReactNode }) {
   const { pathname } = useLocation();
   const { t } = useLang();
+  const { name } = usePersona();
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-30 border-b border-border/60 bg-background/80 backdrop-blur">
@@ -29,7 +31,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <div className="leading-tight">
               <div className="text-sm font-semibold tracking-tight">RAMEAI</div>
               <div className="text-[10px] uppercase tracking-widest text-muted-foreground">
-                {t("nav.brand_tagline")}
+                {t("nav.brand_tagline", { name })}
               </div>
             </div>
           </Link>
