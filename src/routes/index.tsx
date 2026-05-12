@@ -4,6 +4,7 @@ import { Sparkles, Bookmark, Quote, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useLang } from "@/i18n/LanguageProvider";
+import { usePersona } from "@/i18n/PersonaProvider";
 
 export const Route = createFileRoute("/")({
   head: () => ({
