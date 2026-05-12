@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import {
   Clapperboard,
@@ -36,16 +36,29 @@ export function StoryboardDialog({
   idea,
   durationSec = 30,
   language = "id",
+  autoOpen = false,
 }: {
   idea: Idea;
   durationSec?: number;
   language?: "en" | "id";
+  autoOpen?: boolean;
 }) {
   const fn = useServerFn(generateStoryboard);
   const [open, setOpen] = useState(false);
   const [style, setStyle] = useState<Style>("Cinematic");
   const [loading, setLoading] = useState(false);
   const [shots, setShots] = useState<StoryboardShot[]>([]);
+  const autoFiredRef = useRef(false);
+
+  useEffect(() => {
+    if (autoOpen && !autoFiredRef.current) {
+      autoFiredRef.current = true;
+      setOpen(true);
+      // fire generation once dialog is opening
+      setTimeout(() => { run(); }, 50);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoOpen]);
 
   async function run() {
     setLoading(true);
