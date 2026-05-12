@@ -17,10 +17,10 @@ const en: Dict = {
   "nav.saved": "Saved",
   "nav.hooks": "Library",
   "nav.persona": "Persona",
-  "nav.brand_tagline": "Wandy POV brain",
+  "nav.brand_tagline": "{name} brain",
   "lang.label": "Language",
   // home
-  "home.eyebrow": "RameAL · Wandy POV",
+  "home.eyebrow": "RameAL · {name}",
   "home.title": "What is nobody talking about today?",
   "home.subtitle": "Drop a topic. Get hook, foreshadow, body, ending, caption — ready to shoot Reels / TikTok.",
   "home.cta": "Generate ideas",
