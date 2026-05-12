@@ -92,7 +92,7 @@ function GeneratePage() {
       <header>
         <h1 className="text-2xl font-bold tracking-tight">{t("gen.title")}</h1>
         <p className="text-sm text-muted-foreground">
-          {t("gen.subtitle")}
+          {t("gen.subtitle", { name })}
         </p>
       </header>
 
