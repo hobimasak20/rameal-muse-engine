@@ -38,6 +38,7 @@ export const Route = createFileRoute("/generate")({
 function GeneratePage() {
   const fn = useServerFn(generateIdeas);
   const { lang, t } = useLang();
+  const { name } = usePersona();
   const { topic: initialTopic, autorun, intent } = Route.useSearch();
   const [topic, setTopic] = useState(initialTopic);
   useEffect(() => {
