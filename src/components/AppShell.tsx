@@ -31,7 +31,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <div className="leading-tight">
               <div className="text-sm font-semibold tracking-tight">RAMEAI</div>
               <div className="text-[10px] uppercase tracking-widest text-muted-foreground">
-                {t("nav.brand_tagline")}
+                {t("nav.brand_tagline", { name })}
               </div>
             </div>
           </Link>
