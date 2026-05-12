@@ -33,7 +33,7 @@ const en: Dict = {
   "home.empty": "No ideas yet. Let's generate one.",
   // generate
   "gen.title": "Generate",
-  "gen.subtitle": "Topic + tone → script in Wandy POV voice.",
+  "gen.subtitle": "Topic + tone → script in {name} voice.",
   "gen.topic": "Topic",
   "gen.topic_placeholder": "e.g. grocery prices in Sydney vs Jakarta, or a random thought about MRT queues",
   "gen.tone": "Tone",
