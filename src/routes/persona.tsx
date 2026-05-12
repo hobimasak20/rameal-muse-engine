@@ -88,6 +88,7 @@ function PersonaPage() {
       .eq("id", p.id);
     setSaving(false);
     if (error) return toast.error("Save failed");
+    setName(p.name);
     toast.success("Persona updated");
   }
 
