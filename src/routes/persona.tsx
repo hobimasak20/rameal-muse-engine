@@ -31,6 +31,7 @@ type Persona = {
 
 function PersonaPage() {
   const { t } = useLang();
+  const { setName } = usePersona();
   const [p, setP] = useState<Persona | null>(null);
   const [saving, setSaving] = useState(false);
 
