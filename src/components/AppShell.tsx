@@ -2,6 +2,7 @@ import { Link, useLocation } from "@tanstack/react-router";
 import { Sparkles, Bookmark, Quote, User2, LayoutDashboard } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLang } from "@/i18n/LanguageProvider";
+import { usePersona } from "@/i18n/PersonaProvider";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 const NAV = [
