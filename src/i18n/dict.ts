@@ -107,7 +107,7 @@ const id: Dict = {
   "home.see_all": "Lihat semua",
   "home.empty": "Belum ada ideas. Generate dulu yuk.",
   "gen.title": "Generate",
-  "gen.subtitle": "Topic + tone → script in Wandy POV voice.",
+  "gen.subtitle": "Topic + tone → script in {name} voice.",
   "gen.topic": "Topic",
   "gen.topic_placeholder": "contoh: harga groceries di Sydney vs Jakarta, atau random thought tentang antri di MRT",
   "gen.tone": "Tone",
