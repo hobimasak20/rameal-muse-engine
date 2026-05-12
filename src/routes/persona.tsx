@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useLang } from "@/i18n/LanguageProvider";
+import { usePersona } from "@/i18n/PersonaProvider";
 
 export const Route = createFileRoute("/persona")({
   head: () => ({
