@@ -4,7 +4,7 @@ import { DEFAULT_LANG, DICT, type LangCode } from "./dict";
 type Ctx = {
   lang: LangCode;
   setLang: (l: LangCode) => void;
-  t: (key: string) => string;
+  t: (key: string, vars?: Record<string, string | number>) => string;
 };
 
 const LanguageContext = createContext<Ctx | undefined>(undefined);
