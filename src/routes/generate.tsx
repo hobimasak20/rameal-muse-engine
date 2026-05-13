@@ -41,18 +41,26 @@ function GeneratePage() {
   const { lang, t } = useLang();
   const { name } = usePersona();
   const { topic: initialTopic, autorun, intent } = Route.useSearch();
-  const [topic, setTopic] = useState(initialTopic);
+  const [topic, setTopic] = usePersistentState<string>("rameal:gen:topic", initialTopic);
   useEffect(() => {
     if (initialTopic) setTopic(initialTopic);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialTopic]);
-  const [tone, setTone] = useState<Tone>("Honest");
-  const [count, setCount] = useState(3);
-  const [durationSec, setDurationSec] = useState(30);
-  const [viralBoost, setViralBoost] = useState(false);
+  const [tone, setTone] = usePersistentState<Tone>("rameal:gen:tone", "Honest");
+  const [count, setCount] = usePersistentState<number>("rameal:gen:count", 3);
+  const [durationSec, setDurationSec] = usePersistentState<number>("rameal:gen:duration", 30);
+  const [viralBoost, setViralBoost] = usePersistentState<boolean>("rameal:gen:viral", false);
   const [loading, setLoading] = useState(false);
-  const [ideas, setIdeas] = useState<Idea[]>([]);
-  const [ctx, setCtx] = useState<{ topic: string; tone: Tone; viralBoost: boolean; durationSec: number; language: "en" | "id" } | null>(null);
+  const [ideas, setIdeas] = usePersistentState<Idea[]>("rameal:gen:ideas", []);
+  const [ctx, setCtx] = usePersistentState<{ topic: string; tone: Tone; viralBoost: boolean; durationSec: number; language: "en" | "id" } | null>("rameal:gen:ctx", null);
   const [autoStoryboard, setAutoStoryboard] = useState(false);
+
+  function clearSession() {
+    setIdeas([]);
+    setCtx(null);
+    setTopic("");
+    toast.success("Session cleared");
+  }
 
   async function onGenerate() {
     if (!topic.trim()) {
