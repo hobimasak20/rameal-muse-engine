@@ -30,6 +30,7 @@ import {
 import { enhanceHooks } from "@/lib/hooks.functions";
 import { cn } from "@/lib/utils";
 import { useLang } from "@/i18n/LanguageProvider";
+import { usePersistentState } from "@/hooks/usePersistentState";
 
 export const Route = createFileRoute("/hooks")({
   head: () => ({
@@ -79,9 +80,9 @@ function HooksPage() {
   const { lang, t } = useLang();
   const [items, setItems] = useState<Hook[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeCat, setActiveCat] = useState<string>("all");
-  const [query, setQuery] = useState("");
-  const [favOnly, setFavOnly] = useState(false);
+  const [activeCat, setActiveCat] = usePersistentState<string>("rameal:hooks:cat", "all");
+  const [query, setQuery] = usePersistentState<string>("rameal:hooks:q", "");
+  const [favOnly, setFavOnly] = usePersistentState<boolean>("rameal:hooks:fav", false);
 
   // Add hook form
   const [newHook, setNewHook] = useState("");
@@ -494,11 +495,11 @@ function AIHooksDialog({ onSave }: { onSave: (text: string, category: string) =>
   const fn = useServerFn(enhanceHooks);
   const { lang } = useLang();
   const [open, setOpen] = useState(false);
-  const [mode, setMode] = useState<Mode>("generate");
-  const [hook, setHook] = useState("");
-  const [niche, setNiche] = useState("Korean food content");
-  const [language, setLanguage] = useState(lang === "en" ? "English" : "Bahasa Indonesia");
-  const [results, setResults] = useState<string[]>([]);
+  const [mode, setMode] = usePersistentState<Mode>("rameal:hooklab:mode", "generate");
+  const [hook, setHook] = usePersistentState<string>("rameal:hooklab:hook", "");
+  const [niche, setNiche] = usePersistentState<string>("rameal:hooklab:niche", "Korean food content");
+  const [language, setLanguage] = usePersistentState<string>("rameal:hooklab:lang", lang === "en" ? "English" : "Bahasa Indonesia");
+  const [results, setResults] = usePersistentState<string[]>("rameal:hooklab:results", []);
   const [loading, setLoading] = useState(false);
 
   async function run() {
