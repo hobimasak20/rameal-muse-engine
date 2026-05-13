@@ -80,9 +80,9 @@ function HooksPage() {
   const { lang, t } = useLang();
   const [items, setItems] = useState<Hook[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeCat, setActiveCat] = useState<string>("all");
-  const [query, setQuery] = useState("");
-  const [favOnly, setFavOnly] = useState(false);
+  const [activeCat, setActiveCat] = usePersistentState<string>("rameal:hooks:cat", "all");
+  const [query, setQuery] = usePersistentState<string>("rameal:hooks:q", "");
+  const [favOnly, setFavOnly] = usePersistentState<boolean>("rameal:hooks:fav", false);
 
   // Add hook form
   const [newHook, setNewHook] = useState("");
