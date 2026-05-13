@@ -236,6 +236,19 @@ function GeneratePage() {
 
       {!loading && ideas.length > 0 && (
         <section className="space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="text-xs uppercase tracking-widest text-muted-foreground">
+              {ideas.length} {ideas.length > 1 ? t("gen.button_ideas") : t("gen.button_idea")}
+            </div>
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-7 text-xs text-muted-foreground hover:text-destructive"
+              onClick={clearSession}
+            >
+              <Eraser className="mr-1 h-3 w-3" /> Clear session
+            </Button>
+          </div>
           {ideas.map((i, idx) => (
             <IdeaCard
               key={idx}
