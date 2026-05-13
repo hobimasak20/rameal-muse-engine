@@ -30,6 +30,7 @@ import {
 import { enhanceHooks } from "@/lib/hooks.functions";
 import { cn } from "@/lib/utils";
 import { useLang } from "@/i18n/LanguageProvider";
+import { usePersistentState } from "@/hooks/usePersistentState";
 
 export const Route = createFileRoute("/hooks")({
   head: () => ({
