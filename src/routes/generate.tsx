@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
 import { useServerFn } from "@tanstack/react-start";
-import { Sparkles, Loader2, Flame, Clock } from "lucide-react";
+import { Sparkles, Loader2, Flame, Clock, Eraser } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -14,6 +14,7 @@ import { IdeaCard, type Idea } from "@/components/IdeaCard";
 import { cn } from "@/lib/utils";
 import { useLang } from "@/i18n/LanguageProvider";
 import { usePersona } from "@/i18n/PersonaProvider";
+import { usePersistentState } from "@/hooks/usePersistentState";
 
 const TONES = ["Honest", "Sarcastic", "Confused", "Mindblown", "Frustrated", "Comedy", "Twist", "Informative"] as const;
 type Tone = (typeof TONES)[number];
