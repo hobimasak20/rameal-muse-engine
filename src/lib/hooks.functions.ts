@@ -61,7 +61,7 @@ export const enhanceHooks = createServerFn({ method: "POST" })
 
     try {
       const gateway = createLovableAiGatewayProvider(apiKey);
-      const model = gateway("gemini-2.0-flash");
+      const model = gateway("gemini-3.1-flash-lite");
       const { text } = await generateText({
         model,
         system: systemFor(data.appLanguage, data.mode),
