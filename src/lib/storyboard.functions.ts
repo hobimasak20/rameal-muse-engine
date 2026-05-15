@@ -64,7 +64,7 @@ function extractJson(text: string): unknown {
 export const generateStoryboard = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => InputSchema.parse(input))
   .handler(async ({ data }) => {
-    const apiKey = process.env.GEMINI_API_KEY;
+    const apiKey = process.env.LOVABLE_API_KEY;
     if (!apiKey) return { ok: false as const, error: "AI not configured." };
 
     const fullScript = `HOOK: ${data.hook}\nFORESHADOW: ${data.foreshadow}\nBODY: ${data.body}\nENDING: ${data.ending}`;
