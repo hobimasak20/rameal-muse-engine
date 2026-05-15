@@ -96,7 +96,7 @@ DO NOT mix languages. Keep universally accepted production terms (close-up, push
 
     try {
       const gateway = createLovableAiGatewayProvider(apiKey);
-      const model = gateway("gemini-1.5-flash");
+      const model = gateway("gemini-2.0-flash");
       const { text } = await generateText({
         model,
         system,
