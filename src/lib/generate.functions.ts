@@ -156,7 +156,7 @@ Return ${data.count} distinct, non-repetitive ideas. Each TITLE must be a short 
 
     try {
       const gateway = createLovableAiGatewayProvider(apiKey);
-      const model = gateway("gemini-1.5-flash");
+      const model = gateway("gemini-2.0-flash");
 
       const { text } = await generateText({
         model,
