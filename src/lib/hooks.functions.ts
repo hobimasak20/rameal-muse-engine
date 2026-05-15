@@ -29,7 +29,6 @@ const MODE_PROMPT: Record<(typeof MODES)[number], (d: z.infer<typeof InputSchema
 
 function systemFor(appLanguage: "en" | "id", mode: (typeof MODES)[number]): string {
   const langName = appLanguage === "en" ? "English" : "Bahasa Indonesia";
-  // Translate mode picks the user-supplied target language inside MODE_PROMPT itself.
   const langRule =
     mode === "translate"
       ? `Output language is whatever the user requested in the prompt.`
@@ -52,7 +51,7 @@ function extractJson(text: string): unknown {
 export const enhanceHooks = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => InputSchema.parse(input))
   .handler(async ({ data }) => {
-    const apiKey = process.env.GEMINI_API_KEY;
+    const apiKey = process.env.LOVABLE_API_KEY;
     if (!apiKey) return { ok: false as const, error: "AI not configured." };
 
     if (data.mode !== "generate" && !data.hook?.trim()) {
