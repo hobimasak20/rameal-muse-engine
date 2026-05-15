@@ -1,11 +1,12 @@
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 
-export const createLovableAiGatewayProvider = (lovableApiKey: string) =>
+// Connects to Google Gemini directly using your GEMINI_API_KEY.
+// Set this secret in Cloudflare Workers → Settings → Variables and Secrets.
+export const createLovableAiGatewayProvider = (apiKey: string) =>
   createOpenAICompatible({
-    name: "lovable",
-    baseURL: "https://ai.gateway.lovable.dev/v1",
+    name: "gemini",
+    baseURL: "https://generativelanguage.googleapis.com/v1beta/openai",
     headers: {
-      "Lovable-API-Key": lovableApiKey,
-      "X-Lovable-AIG-SDK": "vercel-ai-sdk",
+      Authorization: `Bearer ${apiKey}`,
     },
   });
