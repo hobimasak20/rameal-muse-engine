@@ -10,3 +10,4 @@ export const createLovableAiGatewayProvider = (apiKey: string) =>
       Authorization: `Bearer ${apiKey}`,
     },
   });
+ 
