@@ -28,6 +28,7 @@ const InputSchema = z.object({
 });
 
 function buildStructure(duration: number) {
+  // Scale section timings proportionally to total duration.
   const hookEnd = Math.max(2, Math.round(duration * 0.1));
   const foreEnd = Math.max(hookEnd + 2, Math.round(duration * 0.2));
   const bodyEnd = Math.max(foreEnd + 3, Math.round(duration * 0.85));
@@ -84,9 +85,9 @@ function normalizeIdea(raw: unknown) {
 export const generateIdeas = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => InputSchema.parse(input))
   .handler(async ({ data }) => {
-    const apiKey = process.env.LOVABLE_API_KEY;
+    const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      return { ok: false as const, error: "AI not configured. Add LOVABLE_API_KEY." };
+      return { ok: false as const, error: "AI not configured. Add GEMINI_API_KEY in Cloudflare secrets." };
     }
 
     // Load persona from DB
@@ -113,7 +114,7 @@ ${personaBlock}
 
 ${(() => {
   const s = buildStructure(data.durationSec);
-  const wordTarget = Math.round(data.durationSec * 2.5);
+  const wordTarget = Math.round(data.durationSec * 2.5); // ~150 wpm spoken
   const isEn = data.language === "en";
   const hookExamples = isEn
     ? `"Nobody talks about this in...", "You'd be shocked if...", "Stop saying ... before you know this".`
@@ -155,7 +156,7 @@ Return ${data.count} distinct, non-repetitive ideas. Each TITLE must be a short 
 
     try {
       const gateway = createLovableAiGatewayProvider(apiKey);
-      const model = gateway("gemini-2.0-flash");
+      const model = gateway("gemini-1.5-flash");
 
       const { text } = await generateText({
         model,
