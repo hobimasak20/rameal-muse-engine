@@ -53,11 +53,11 @@ function PersonaPage() {
         .insert({
           name: "Wandy POV",
           identity_md:
-            "Honest Indonesian travel & lifestyle creator based in Sydney. Compares Australia ↔ Indonesia with sharp, observational POV.",
+            "Indonesian male creator who creates travel, food, lifestyle, and humorous social media content. Loves Asian culture, street food, hidden gems, airports, DIY, running, camping, travel overseas and business experiments. so into learning culture.",
           style_md:
-            "Casual Bahasa Indonesia with natural English mix. Short, punchy, spoken rhythm. Curiosity-driven hooks, expectation vs reality, light sarcasm.",
+            "casual, modern, relatable, funny, curious, slightly chaotic but entertaining, authentic storytelling over fake motivational vibes,Fast-paced TikTok/Reels energy,Cinematic mixed with comedy,Human and conversational, not corporate bilingual vibe (English + natural Indonesian),Strong hooks and curiosity-driven storytelling.",
           do_md:
-            "Use specific details (prices in $AUD/Rp, names, behaviors). Lead with a strong hook. Compare cultures honestly. Keep it human and relatable.",
+            "Use short punchy hooks, focus on travel, food, street food, hidden places, daily life, and unique experiences, make scripts easy to film and easy to speak, add humor, reactions, and personality.",
           dont_md:
             "No corporate writing. No fake hype. No generic travel clichés. No hate or targeted attacks.",
         })
