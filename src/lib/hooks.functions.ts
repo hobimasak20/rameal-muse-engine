@@ -52,7 +52,7 @@ function extractJson(text: string): unknown {
 export const enhanceHooks = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => InputSchema.parse(input))
   .handler(async ({ data }) => {
-    const apiKey = process.env.LOVABLE_API_KEY;
+    const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) return { ok: false as const, error: "AI not configured." };
 
     if (data.mode !== "generate" && !data.hook?.trim()) {
@@ -61,7 +61,7 @@ export const enhanceHooks = createServerFn({ method: "POST" })
 
     try {
       const gateway = createLovableAiGatewayProvider(apiKey);
-      const model = gateway("google/gemini-3-flash-preview");
+      const model = gateway("gemini-1.5-flash");
       const { text } = await generateText({
         model,
         system: systemFor(data.appLanguage, data.mode),
