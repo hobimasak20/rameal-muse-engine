@@ -13,7 +13,7 @@ import { usePersona } from "@/i18n/PersonaProvider";
 export const Route = createFileRoute("/persona")({
   head: () => ({
     meta: [
-      { title: "Persona · RameAL" },
+      { title: "Persona · RameAI" },
       { name: "description", content: "Edit the Wandy POV persona that drives every generation." },
     ],
   }),
