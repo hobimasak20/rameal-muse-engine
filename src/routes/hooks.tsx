@@ -17,7 +17,6 @@ import {
   Clapperboard,
 } from "lucide-react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -27,7 +26,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { enhanceHooks } from "@/lib/hooks.functions";
+import { enhanceHooks } from "../../hooks.functions";
 import { cn } from "@/lib/utils";
 import { useLang } from "@/i18n/LanguageProvider";
 import { usePersistentState } from "@/hooks/usePersistentState";
