@@ -35,7 +35,7 @@ import { usePersistentState } from "@/hooks/usePersistentState";
 export const Route = createFileRoute("/hooks")({
   head: () => ({
     meta: [
-      { title: "Hook library · RameAL" },
+      { title: "Hook library · RameAi" },
       { name: "description", content: "20+ viral hook templates, AI-rewriter, and quick insert into scripts." },
     ],
   }),
@@ -78,8 +78,8 @@ const SUGGESTED_CATEGORIES = [
 function HooksPage() {
   const navigate = useNavigate();
   const { lang, t } = useLang();
-  const [items, setItems] = useState<Hook[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [items, setItems] = usePersistentState<Hook[]>("rameai_hooks", []);
+const [loading, setLoading] = useState(false);
   const [activeCat, setActiveCat] = usePersistentState<string>("rameal:hooks:cat", "all");
   const [query, setQuery] = usePersistentState<string>("rameal:hooks:q", "");
   const [favOnly, setFavOnly] = usePersistentState<boolean>("rameal:hooks:fav", false);
@@ -88,22 +88,7 @@ function HooksPage() {
   const [newHook, setNewHook] = useState("");
   const [newCat, setNewCat] = useState("Travel");
 
-  async function load() {
-    setLoading(true);
-    const { data, error } = await supabase
-      .from("hooks")
-      .select("*")
-      .eq("language", lang)
-      .order("created_at", { ascending: false });
-    if (error) toast.error("Couldn't load hooks");
-    setItems((data as Hook[]) ?? []);
-    setLoading(false);
-  }
-
-  useEffect(() => {
-    load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lang]);
+ // no load needed — usePersistentState hydrates from localStorage
 
   const categories = useMemo(() => {
     const s = new Set<string>(items.map((i) => i.category));
@@ -134,43 +119,37 @@ function HooksPage() {
     [items]
   );
 
-  async function addHook() {
+  function addHook() {
     const text = newHook.trim();
     if (!text) return;
-    const { data, error } = await supabase
-      .from("hooks")
-      .insert({ text, category: newCat.trim() || "general", source: "user", language: lang })
-      .select("*")
-      .single();
-    if (error || !data) return toast.error("Couldn't add hook");
-    setItems((prev) => [data as Hook, ...prev]);
+    const newItem: Hook = {
+      id: crypto.randomUUID(),
+      text,
+      category: newCat.trim() || "general",
+      source: "user",
+      emotion: "",
+      content_type: "Reels",
+      favorite: false,
+      use_count: 0,
+      last_used_at: null,
+      created_at: new Date().toISOString(),
+      language: lang,
+    };
+    setItems((prev) => [newItem, ...prev]);
     setNewHook("");
     toast.success(t("hooks.added"));
   }
 
-  async function removeHook(id: string) {
-    const { error } = await supabase.from("hooks").delete().eq("id", id);
-    if (error) return toast.error("Delete failed");
+ function removeHook(id: string) {
     setItems((p) => p.filter((i) => i.id !== id));
   }
 
-  async function toggleFavorite(h: Hook) {
-    const next = !h.favorite;
-    setItems((p) => p.map((x) => (x.id === h.id ? { ...x, favorite: next } : x)));
-    const { error } = await supabase.from("hooks").update({ favorite: next }).eq("id", h.id);
-    if (error) {
-      setItems((p) => p.map((x) => (x.id === h.id ? { ...x, favorite: !next } : x)));
-      toast.error("Couldn't save favorite");
-    }
+ function toggleFavorite(h: Hook) {
+    setItems((p) => p.map((x) => (x.id === h.id ? { ...x, favorite: !x.favorite } : x)));
   }
 
-  async function markUsed(h: Hook) {
-    const next = { ...h, use_count: h.use_count + 1, last_used_at: new Date().toISOString() };
-    setItems((p) => p.map((x) => (x.id === h.id ? next : x)));
-    await supabase
-      .from("hooks")
-      .update({ use_count: next.use_count, last_used_at: next.last_used_at })
-      .eq("id", h.id);
+  function markUsed(h: Hook) {
+    setItems((p) => p.map((x) => (x.id === h.id ? { ...x, use_count: x.use_count + 1, last_used_at: new Date().toISOString() } : x)));
   }
 
   async function copyHook(h: Hook) {
@@ -184,17 +163,21 @@ function HooksPage() {
     navigate({ to: "/generate", search: { topic: h.text, autorun: 1, intent } });
   }
 
-  async function saveGenerated(text: string, category: string) {
-    const { data, error } = await supabase
-      .from("hooks")
-      .insert({ text, category, source: "ai", emotion: "Curiosity", content_type: "Reels", language: lang })
-      .select("*")
-      .single();
-    if (error || !data) {
-      toast.error("Couldn't save hook");
-      return;
-    }
-    setItems((p) => [data as Hook, ...p]);
+ function saveGenerated(text: string, category: string) {
+    const newItem: Hook = {
+      id: crypto.randomUUID(),
+      text,
+      category,
+      source: "ai",
+      emotion: "Curiosity",
+      content_type: "Reels",
+      favorite: false,
+      use_count: 0,
+      last_used_at: null,
+      created_at: new Date().toISOString(),
+      language: lang,
+    };
+    setItems((p) => [newItem, ...p]);
     toast.success(t("hooks.saved_lib"));
   }
 
