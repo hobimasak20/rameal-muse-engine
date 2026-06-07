@@ -1,5 +1,4 @@
-import { createContext, useContext, useEffect, useState, useCallback } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { createContext, useContext, useState, useCallback, useEffect } from "react";
 
 type Ctx = {
   name: string;
@@ -7,40 +6,30 @@ type Ctx = {
 };
 
 const PersonaContext = createContext<Ctx | undefined>(undefined);
-
 const DEFAULT_NAME = "Wandy POV";
+const STORAGE_KEY = "rameai_persona";
 
 export function PersonaProvider({ children }: { children: React.ReactNode }) {
-  const [name, setNameState] = useState<string>(DEFAULT_NAME);
+  const [name, setNameState] = useState<string>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      return saved ? JSON.parse(saved).name || DEFAULT_NAME : DEFAULT_NAME;
+    } catch {
+      return DEFAULT_NAME;
+    }
+  });
 
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      const { data } = await supabase.from("persona").select("name").limit(1).maybeSingle();
-      if (!cancelled && data?.name) setNameState(data.name);
-    })();
-
-    const channel = supabase
-      .channel("persona-name")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "persona" },
-        (payload) => {
-          const next = (payload.new as { name?: string } | null)?.name;
-          if (next) setNameState(next);
-        }
-      )
-      .subscribe();
-
-    return () => {
-      cancelled = true;
-      supabase.removeChannel(channel);
-    };
+  const setName = useCallback((n: string) => {
+    const newName = n || DEFAULT_NAME;
+    setNameState(newName);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ name: newName }));
   }, []);
 
-  const setName = useCallback((n: string) => setNameState(n || DEFAULT_NAME), []);
-
-  return <PersonaContext.Provider value={{ name, setName }}>{children}</PersonaContext.Provider>;
+  return (
+    <PersonaContext.Provider value={{ name, setName }}>
+      {children}
+    </PersonaContext.Provider>
+  );
 }
 
 export function usePersona(): Ctx {
